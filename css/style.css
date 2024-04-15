@@ -1,0 +1,63 @@
+body {
+    background-color: #2e3330;
+    font-family: Arial, sans-serif;
+    color: aquamarine;
+}
+
+#header {
+    text-align: center;
+    margin: 0 auto;
+}
+
+#content {
+    margin: 0 auto;
+}
+
+#tables {
+    display: flex;
+}
+
+.player {
+    text-align: center;
+    padding: 10px;
+}
+
+.aboveCards {
+    margin: 0 auto;
+    font-size: xx-large;
+}
+
+img {
+    height: 32px;
+    filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.4));
+}
+
+table {
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid black;
+    padding: 15px;
+    text-align: center;
+    width: 20%;
+    color: #0f0f0f;
+    font-weight: bold;
+}
+
+th {
+    background-color: #2f2f2f;
+}
+
+td:hover {
+    background-color: var(--cell-hover-color) !important;
+}
+
+button {
+    font-size: 2em;
+    padding: 0.5em;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    color: aquamarine;
+}
