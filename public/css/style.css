@@ -34,6 +34,8 @@ img {
 
 table {
     border-collapse: collapse;
+    width: 910px;
+    height: 530px;
 }
 
 th, td {
@@ -41,6 +43,7 @@ th, td {
     padding: 15px;
     text-align: center;
     width: 20%;
+    height: 20%;
     color: #0f0f0f;
     font-weight: bold;
 }
