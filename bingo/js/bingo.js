@@ -1,7 +1,7 @@
 /**
-* Create a square bingo grid with the given HTML id using random elements from the bingo array
-* @param {string} htmlId - The HTML id of the grid element
-*/
+ * Create a square bingo grid with the given HTML id using random elements from the bingo array
+ * @param {string} htmlId - The HTML id of the grid element
+ */
 function makeGrid(htmlId) {
     let gridDiv = document.getElementById(htmlId);
     let shuffledBingo = shuffle(bingo);
@@ -19,8 +19,8 @@ function makeGrid(htmlId) {
             const bgColors = getRandomPastelColor();
             cell.style.backgroundColor = bgColors.pastelColor;
             cell.style.setProperty('--cell-hover-color', bgColors.hoverColor);
-            cell.addEventListener('click', function() {
-              toggleGreyOut(this);
+            cell.addEventListener('click', function () {
+                toggleGreyOut(this);
             });
             row.appendChild(cell);
         }
@@ -31,11 +31,15 @@ function makeGrid(htmlId) {
 }
 
 /**
-* Shuffle an array using the Fisher-Yates algorithm
-* @param {Array} array - The array to shuffle
-* @returns {Array} The shuffled array
-*/
-function shuffle(grid) {
+ * Shuffle a bingo definition using the Fisher-Yates algorithm
+ * @param {Object} complexGrid - The bingo definition to shuffle
+ * @returns {Array} The shuffled array
+ */
+function shuffle(complexGrid) {
+    let grid = [];
+    for (let sectionName in complexGrid) {
+        grid.push(...complexGrid[sectionName]);
+    }
     let array = grid.slice();
     for (let i = array.length - 1; i > 0; i--) {
         let j = Math.floor(Math.random() * (i + 1));
@@ -47,7 +51,7 @@ function shuffle(grid) {
 }
 
 function toggleGreyOut(element) {
-    if (element.style.textDecoration == "line-through") {
+    if (element.style.textDecoration === "line-through") {
         element.style.textDecoration = "none";
         const bgColors = getRandomPastelColor();
         element.style.backgroundColor = bgColors.pastelColor;
@@ -61,42 +65,51 @@ function toggleGreyOut(element) {
     }
 }
 
-/**
-* TODO
-* @param
-* @returns
-*/
 function makeCellHtml(itemDescription, sprite) {
-    return '<div class="sprite"><img src="' + sprite + '"/></div><div class="desc">' + itemDescription + '</div>';
+    return '<div class="sprite"><img src="' + sprite + '" alt=""/></div><div class="desc">' + itemDescription + '</div>';
 }
 
 /**
-* Find sprite corresponding to provided description
-* @param {string} description - description of the bingo card
-* @returns {string} - path to the PNG sprite
-*/
+ * Find sprite corresponding to provided description
+ * @param {string} description - description of the bingo card
+ * @returns {string} - path to the PNG sprite
+ */
 function matchDescriptionToSprite(description) {
-    for(let spriteName in sprites) {
-        if (description.indexOf(spriteName) != -1) {
-            return sprites[spriteName];
+    let modifiedDescription = description.toLowerCase().replace(/[^a-z0-9]/g, '');
+    let matches = [];
+    for (let spriteName in sprites) {
+        let modifiedSpriteName = spriteName.toLowerCase().replace(/[^a-z0-9]/g, '');
+        if (modifiedDescription.indexOf(modifiedSpriteName) !== -1) {
+            matches.push(spriteName);
         }
     }
+    if (matches.length >= 1) {
+        // return longest sprite name
+        let longestMatch = matches[0];
+        for (let i = 1; i < matches.length; i++) {
+            if (matches[i].length > longestMatch.length) {
+                longestMatch = matches[i];
+            }
+        }
+        return sprites[longestMatch];
+    }
+    console.log('No sprite found for description: ' + description)
     return fallbackSprite;
 }
 
 function getRandomPastelColor() {
-  const hue = Math.random() * 60 + 180; // pick a hue between 180 and 240 degrees
-  const saturation = '50%'; // set saturation to 50%
-  const lightness = Math.random() * 30 + 70 + '%'; // pick a lightness between 70% and 100%
-  const alpha = 1; // set alpha to fully opaque
+    const hue = Math.random() * 60 + 180; // pick a hue between 180 and 240 degrees
+    const saturation = '50%'; // set saturation to 50%
+    const lightness = Math.random() * 30 + 70 + '%'; // pick a lightness between 70% and 100%
+    const alpha = 1; // set alpha to fully opaque
 
-  const pastelColor = `hsla(${hue}, ${saturation}, ${lightness}, ${alpha})`;
-  const hoverColor = `hsla(${hue}, ${saturation}, calc(${lightness} - 10%), ${alpha})`;
+    const pastelColor = `hsla(${hue}, ${saturation}, ${lightness}, ${alpha})`;
+    const hoverColor = `hsla(${hue}, ${saturation}, calc(${lightness} - 10%), ${alpha})`;
 
-  return { pastelColor, hoverColor };
+    return {pastelColor, hoverColor};
 }
 
-window.onload = function(){
+window.onload = function () {
     makeGrid("bingo_grid_p1");
     makeGrid("bingo_grid_p2");
 }
