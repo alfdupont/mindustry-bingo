@@ -54,12 +54,13 @@ td:hover {
 }
 
 button {
-    font-size: 2em;
-    padding: 0.5em;
+    font-size: 1.5em;
+    margin: 0.3em;
+    padding: 0.3em;
     border: none;
-    background-color: transparent;
+    background-color: aquamarine;
     cursor: pointer;
-    color: aquamarine;
+    color: #0f0f0f;
 }
 
 #error {
