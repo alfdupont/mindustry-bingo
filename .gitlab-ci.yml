@@ -4,6 +4,6 @@ pages:
     - echo 'Nothing to build, deploying static website.'
   artifacts:
     paths:
-      - bingo/
+      - public/
   only:
     - main
