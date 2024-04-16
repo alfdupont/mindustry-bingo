@@ -37,9 +37,32 @@ function makeGrid(htmlId) {
  */
 function shuffle(complexGrid) {
     let grid = [];
+    
+    // get configuration
+    let config = document.querySelector("form");
+    let checkedCategories = [];
+    for (const element of config) {
+        if (element.checked) {
+            checkedCategories.push(element.id);
+        }
+    }
     for (let sectionName in complexGrid) {
+        if (!checkedCategories.includes(sectionName)) {
+            continue;
+        }
         grid.push(...complexGrid[sectionName]);
     }
+
+    let errorDiv = document.getElementById("error");
+    if (grid.length < bingoGridSize * bingoGridSize) {
+        console.error("Not enough items to fill the grid. Please select more categories.");
+        // display error in pop up
+        errorDiv.innerHTML = "Not enough items to fill the grid. Please select more categories.";
+        errorDiv.style.display = "block";
+        return [];
+    }
+    errorDiv.innerHTML = "";
+    
     let array = grid.slice();
     for (let i = array.length - 1; i > 0; i--) {
         let j = Math.floor(Math.random() * (i + 1));
@@ -109,7 +132,38 @@ function getRandomPastelColor() {
     return {pastelColor, hoverColor};
 }
 
+function renderConfigForm() {
+    let categories = Object.keys(bingo);
+    let formDiv = document.getElementById("config");
+    let applyDiv = document.getElementById("apply");
+    // Create a form
+    let form = document.createElement("form");
+    for (const element of categories) {
+        // Create a checkbox for each category
+        let checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.id = element;
+        checkbox.checked = true;
+        // add a label to the checkbox
+        let label = document.createElement("label");
+        label.htmlFor = element;
+        label.appendChild(document.createTextNode(element));
+        form.appendChild(checkbox);
+        form.appendChild(label);
+        // break a line
+        form.appendChild(document.createElement("br"));
+    }
+    // Create a button to generate the bingo cards
+    let button = document.createElement("button");
+    button.innerHTML = "Apply";
+    button.onclick = function () {
+        makeGrid("bingo_grid_p1");
+        makeGrid("bingo_grid_p2");
+    }
+    applyDiv.appendChild(button);
+    formDiv.appendChild(form);
+}
+
 window.onload = function () {
-    makeGrid("bingo_grid_p1");
-    makeGrid("bingo_grid_p2");
+    renderConfigForm();
 }

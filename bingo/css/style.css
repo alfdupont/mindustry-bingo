@@ -61,3 +61,9 @@ button {
     cursor: pointer;
     color: aquamarine;
 }
+
+#error {
+    color: red;
+    text-align: center;
+    font-size: 2em;
+}
