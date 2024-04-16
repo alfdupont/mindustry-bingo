@@ -166,4 +166,6 @@ function renderConfigForm() {
 
 window.onload = function () {
     renderConfigForm();
+    makeGrid("bingo_grid_p1");
+    makeGrid("bingo_grid_p2");
 }
