@@ -8,14 +8,14 @@ const cellSizePx = 120;
  * @param {string} seed - The seed for the random number generator
  * @param gridSize - The size of the grid
  */
-function makeGrid(htmlId, seed, gridSize) {
+function makeGrid(htmlId, seed, gridSize, categories) {
     let gridDiv = document.getElementById(htmlId);
     if (!gridSize) {
         gridSize = bingoGridSize;
     } else {
         gridSize = parseInt(gridSize);
     }
-    let shuffledBingo = shuffle(bingo, seed, gridSize);
+    let shuffledBingo = shuffle(bingo, seed, gridSize, categories);
 
     let gridItems = shuffledBingo.slice(0, gridSize * gridSize);
     let grid = document.createElement("table");
@@ -64,8 +64,9 @@ function makeGrid(htmlId, seed, gridSize) {
         }
     });
 
-    // Update the URL with the new seed
-    window.history.replaceState({}, '', `${window.location.pathname}?seed=${seed}&gridSize=${gridSize}`);
+    // Update the URL with the new seed, gridSize, and categories
+    let categoriesParam = categories.join(',');
+    window.history.replaceState({}, '', `${window.location.pathname}?seed=${seed}&gridSize=${gridSize}&categories=${categoriesParam}`);
 }
 
 /**
@@ -235,20 +236,25 @@ function matchDescriptionToSprite(description) {
     return fallbackSprite;
 }
 
-function renderCategoriesConfigForm() {
-    let categories = Object.keys(bingo);
+function renderCategoriesConfigForm(categories) {
+    if (!categories) {
+        categories = Object.keys(bingo);
+    }
+    allCategories = Object.keys(bingo);
     let formDiv = document.getElementById("categories");
     let applyDiv = document.getElementById("apply");
-    let form = createCategoriesForm(categories);
+    let form = createCategoriesForm(allCategories, categories);
     let button = createApplyButton();
     applyDiv.appendChild(button);
     formDiv.appendChild(form);
 }
 
-function createCategoriesForm(categories) {
+function createCategoriesForm(allCategories, categories) {
     let form = document.createElement("form");
-    for (const element of categories) {
-        let checkbox = createCheckbox(element);
+    for (const element of allCategories) {
+        // Check if the category is selected
+        let checked = categories.includes(element);
+        let checkbox = createCheckbox(element, checked);
         let label = createLabel(element);
         form.appendChild(checkbox);
         form.appendChild(label);
@@ -257,11 +263,11 @@ function createCategoriesForm(categories) {
     return form;
 }
 
-function createCheckbox(element) {
+function createCheckbox(element, checked) {
     let checkbox = document.createElement("input");
     checkbox.type = "checkbox";
     checkbox.id = element;
-    checkbox.checked = true;
+    checkbox.checked = checked;
     return checkbox;
 }
 
@@ -276,7 +282,8 @@ function createApplyButton() {
     let button = document.createElement("button");
     button.innerHTML = "Apply";
     button.onclick = function () {
-        makeGrid("bingo_grid_p1", generateRandomSeed(), bingoGridSize);
+        let selectedCategories = Array.from(document.querySelectorAll("#categories input:checked")).map(checkbox => checkbox.id);
+        makeGrid("bingo_grid_p1", generateRandomSeed(), bingoGridSize, selectedCategories);
     }
     return button;
 }
@@ -314,14 +321,15 @@ function createGridSizeInput() {
     gridSizeInput.min = "3";
     gridSizeInput.max = "6";
     gridSizeInput.onchange = function () {
+        let selectedCategories = Array.from(document.querySelectorAll("#categories input:checked")).map(checkbox => checkbox.id);
         bingoGridSize = parseInt(gridSizeInput.value);
-        makeGrid("bingo_grid_p1", generateRandomSeed(), bingoGridSize);
+        makeGrid("bingo_grid_p1", generateRandomSeed(), bingoGridSize, selectedCategories);
     }
     return gridSizeInput;
 }
 
-function renderConfig(gridSize) {
-    renderCategoriesConfigForm();
+function renderConfig(gridSize, categories) {
+    renderCategoriesConfigForm(categories);
     renderGridSizeConfig(gridSize);
 }
 
@@ -343,7 +351,8 @@ function xmur3(str) {
 }
 
 function regenerateGrid(htmlId) {
-    makeGrid(htmlId, generateRandomSeed(), bingoGridSize);
+    let selectedCategories = Array.from(document.querySelectorAll("#categories input:checked")).map(checkbox => checkbox.id);
+    makeGrid(htmlId, generateRandomSeed(), bingoGridSize, selectedCategories);
 }
 
 window.onload = function () {
@@ -362,14 +371,21 @@ window.onload = function () {
         gridSize = parseInt(gridSize);
     }
 
-    renderConfig(gridSize);
-    makeGrid("bingo_grid_p1", seed, gridSize);
+    let categories = urlParams.get('categories');
+    if (categories) {
+        categories = categories.split(',');
+    } else {
+        categories = Object.keys(bingo);
+    }
+
+    renderConfig(gridSize, categories);
+    makeGrid("bingo_grid_p1", seed, gridSize, categories);
 
     // Add a "Share" button
     let shareButton = document.createElement("button");
     shareButton.innerHTML = "Share";
     shareButton.onclick = function () {
-        let shareUrl = `${window.location.origin}${window.location.pathname}?seed=${seed}&gridSize=${bingoGridSize}`;
+        let shareUrl = `${window.location.origin}${window.location.pathname}?seed=${seed}&gridSize=${bingoGridSize}&categories=${categories.join(',')}`;
         navigator.clipboard.writeText(shareUrl).then(function() {
             alert("Share link copied to clipboard!");
         }, function(err) {
