@@ -143,7 +143,6 @@ function makeCellHtml(itemDescription, sprite) {
             <img src="${sprite}" alt="" />
             <span class="custom-tooltip">${itemDescription}</span>
         </div>
-        <div class="desc">${itemDescription}</div>
     `;
 }
 
