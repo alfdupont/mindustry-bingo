@@ -1,5 +1,7 @@
 let gridState = [];
 
+const cellSizePx = 120;
+
 /**
  * Create a square bingo grid with the given HTML id using random elements from the bingo array
  * @param {string} htmlId - The HTML id of the grid element
@@ -18,6 +20,8 @@ function makeGrid(htmlId, seed, gridSize) {
     let gridItems = shuffledBingo.slice(0, gridSize * gridSize);
     let grid = document.createElement("table");
     gridState = Array(gridSize).fill().map(() => Array(gridSize).fill(0));
+
+    let fragment = document.createDocumentFragment();
     for (let i = 0; i < gridSize; i++) {
         let row = document.createElement("tr");
         row.className = "bingo-row";
@@ -28,27 +32,38 @@ function makeGrid(htmlId, seed, gridSize) {
             cell.className = "bingo-cell";
             cell.innerHTML = makeCellHtml(item.description, spritePath);
             updateCellAppearance(cell, gridState[i][j]);
-            cell.addEventListener('click', function (e) {
-                console.log("click");
-                console.log(e.button);
-                toggleCell(this, i, j, e.button === 0 ? 1 : 2);
-            });
-            cell.addEventListener('contextmenu', function (e) {
-                console.log("contextmenu");
-                console.log(e.button);
-                e.preventDefault();
-                toggleCell(this, i, j, 2);
-            });
             row.appendChild(cell);
         }
-        grid.appendChild(row);
+        fragment.appendChild(row);
     }
-    let gWidth = gridSize * 120;
-    let gHeight = gridSize * 120;
-    grid.style.width = `${gWidth}px`;
-    grid.style.height = `${gHeight}px`;
+    grid.appendChild(fragment);
+    let gridWidth = gridSize * cellSizePx;
+    let gridHeight = gridSize * cellSizePx;
+    grid.style.width = `${gridWidth}px`;
+    grid.style.height = `${gridHeight}px`;
     gridDiv.innerHTML = "";
     gridDiv.appendChild(grid);
+
+    // Event delegation for click and contextmenu events
+    grid.addEventListener('click', function (e) {
+        let cell = e.target.closest('td');
+        if (cell) {
+            let row = cell.parentElement.rowIndex;
+            let col = cell.cellIndex;
+            toggleCell(cell, row, col, e.button === 0 ? 1 : 2);
+        }
+    });
+
+    grid.addEventListener('contextmenu', function (e) {
+        let cell = e.target.closest('td');
+        if (cell) {
+            e.preventDefault();
+            let row = cell.parentElement.rowIndex;
+            let col = cell.cellIndex;
+            toggleCell(cell, row, col, 2);
+        }
+    });
+
     // Update the URL with the new seed
     window.history.replaceState({}, '', `${window.location.pathname}?seed=${seed}&gridSize=${gridSize}`);
 }
@@ -100,7 +115,6 @@ function shuffle(complexGrid, seed, gridSize) {
 
 function toggleCell(element, row, col, player) {
     let currentState = gridState[row][col];
-    console.log("toggleCell", row, col, player, currentState);
     if (player === 1) {
         if (currentState === 0 || currentState === 2) {
             gridState[row][col] += 1;
@@ -115,7 +129,6 @@ function toggleCell(element, row, col, player) {
         }
     }
 
-    console.log("gridState", gridState[row][col]);
     updateCellAppearance(element, gridState[row][col]);
     checkLineCompletion(row, col, player);
 }
@@ -218,7 +231,7 @@ function matchDescriptionToSprite(description) {
         }
         return sprites[longestMatch];
     }
-    console.log('No sprite found for description: ' + description)
+    console.error('No sprite found for description: ' + description)
     return fallbackSprite;
 }
 
@@ -226,31 +239,46 @@ function renderCategoriesConfigForm() {
     let categories = Object.keys(bingo);
     let formDiv = document.getElementById("categories");
     let applyDiv = document.getElementById("apply");
-    // Create a form
+    let form = createCategoriesForm(categories);
+    let button = createApplyButton();
+    applyDiv.appendChild(button);
+    formDiv.appendChild(form);
+}
+
+function createCategoriesForm(categories) {
     let form = document.createElement("form");
     for (const element of categories) {
-        // Create a checkbox for each category
-        let checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.id = element;
-        checkbox.checked = true;
-        // add a label to the checkbox
-        let label = document.createElement("label");
-        label.htmlFor = element;
-        label.appendChild(document.createTextNode(element));
+        let checkbox = createCheckbox(element);
+        let label = createLabel(element);
         form.appendChild(checkbox);
         form.appendChild(label);
-        // break a line
         form.appendChild(document.createElement("br"));
     }
-    // Create a button to generate the bingo cards
+    return form;
+}
+
+function createCheckbox(element) {
+    let checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.id = element;
+    checkbox.checked = true;
+    return checkbox;
+}
+
+function createLabel(element) {
+    let label = document.createElement("label");
+    label.htmlFor = element;
+    label.appendChild(document.createTextNode(element));
+    return label;
+}
+
+function createApplyButton() {
     let button = document.createElement("button");
     button.innerHTML = "Apply";
     button.onclick = function () {
         makeGrid("bingo_grid_p1", generateRandomSeed(), bingoGridSize);
     }
-    applyDiv.appendChild(button);
-    formDiv.appendChild(form);
+    return button;
 }
 
 function renderGridSizeConfig(gridSize) {
@@ -258,11 +286,27 @@ function renderGridSizeConfig(gridSize) {
         bingoGridSize = gridSize;
     }
     let formDiv = document.getElementById("grid_size");
+    let form = createGridSizeForm();
+    formDiv.appendChild(form);
+}
+
+function createGridSizeForm() {
     let form = document.createElement("form");
+    let label = createGridSizeLabel();
+    form.appendChild(label);
+    let gridSizeInput = createGridSizeInput();
+    form.appendChild(gridSizeInput);
+    return form;
+}
+
+function createGridSizeLabel() {
     let label = document.createElement("label");
     label.htmlFor = "grid_size";
     label.appendChild(document.createTextNode("Grid size: "));
-    form.appendChild(label);
+    return label;
+}
+
+function createGridSizeInput() {
     let gridSizeInput = document.createElement("input");
     gridSizeInput.type = "number";
     gridSizeInput.id = "grid_size";
@@ -273,8 +317,7 @@ function renderGridSizeConfig(gridSize) {
         bingoGridSize = parseInt(gridSizeInput.value);
         makeGrid("bingo_grid_p1", generateRandomSeed(), bingoGridSize);
     }
-    form.appendChild(gridSizeInput);
-    formDiv.appendChild(form);
+    return gridSizeInput;
 }
 
 function renderConfig(gridSize) {
@@ -307,11 +350,18 @@ window.onload = function () {
     // Check if there's a seed in the URL
     const urlParams = new URLSearchParams(window.location.search);
     let seed = urlParams.get('seed');
-    if (!seed) {
-        // If no seed in URL, generate a new one
+    if (!seed || !/^[a-z0-9]+$/i.test(seed)) {
+        // If no valid seed in URL, generate a new one
         seed = generateRandomSeed();
     }
+
     let gridSize = urlParams.get('gridSize');
+    if (!gridSize || isNaN(gridSize) || gridSize < 3 || gridSize > 6) {
+        gridSize = bingoGridSize;
+    } else {
+        gridSize = parseInt(gridSize);
+    }
+
     renderConfig(gridSize);
     makeGrid("bingo_grid_p1", seed, gridSize);
 
@@ -324,6 +374,7 @@ window.onload = function () {
             alert("Share link copied to clipboard!");
         }, function(err) {
             console.error('Could not copy text: ', err);
+            alert("Failed to copy share link. Please try again.");
         });
     }
     document.body.appendChild(shareButton);

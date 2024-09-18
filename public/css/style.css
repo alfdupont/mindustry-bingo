@@ -161,3 +161,8 @@ button {
 .line-complete {
     animation: lineComplete 1s ease-in-out;
 }
+
+/* Disable text selection for the entire grid */
+#bingo_grid_p1 {
+    user-select: none;
+}
