@@ -13,8 +13,12 @@ body {
     margin: 0 auto;
 }
 
-#tables {
+#tables, #config {
     display: flex;
+}
+
+#categories, #grid_size {
+    margin: 10px;
 }
 
 .player {
@@ -34,18 +38,17 @@ img {
 
 table {
     border-collapse: collapse;
-    width: 910px;
-    height: 530px;
+    table-layout: fixed;
 }
 
 th, td {
     border: 1px solid black;
-    padding: 15px;
+    padding: 5px;
     text-align: center;
-    width: 20%;
-    height: 20%;
     color: #0f0f0f;
     font-weight: bold;
+    width: 120px;
+    height: 120px;
 }
 
 th {
@@ -70,4 +73,27 @@ button {
     color: red;
     text-align: center;
     font-size: 2em;
+}
+
+.sprite {
+    position: relative;
+}
+
+.custom-tooltip {
+    visibility: hidden;
+    position: absolute;
+    z-index: 1;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    padding: 5px;
+    border-radius: 6px;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+}
+
+.sprite:hover .custom-tooltip {
+    visibility: visible;
 }

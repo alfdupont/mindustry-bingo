@@ -26,6 +26,10 @@ function makeGrid(htmlId) {
         }
         grid.appendChild(row);
     }
+    let gWidth = bingoGridSize * 120;
+    let gHeight = bingoGridSize * 120;
+    grid.style.width = `${gWidth}px`;
+    grid.style.height = `${gHeight}px`;
     gridDiv.innerHTML = "";
     gridDiv.appendChild(grid);
 }
@@ -89,7 +93,24 @@ function toggleGreyOut(element) {
 }
 
 function makeCellHtml(itemDescription, sprite) {
-    return '<div class="sprite"><img src="' + sprite + '" alt=""/></div><div class="desc">' + itemDescription + '</div>';
+    return `
+        <div class="sprite">
+            <img src="${sprite}" alt="" />
+            <span class="custom-tooltip">${itemDescription}</span>
+        </div>
+        <div class="desc">${itemDescription}</div>
+    `;
+}
+
+function setupInstantTooltips() {
+    document.querySelectorAll('.sprite img').forEach(img => {
+        img.addEventListener('mouseenter', function() {
+            this.title = this.dataset.title;
+        });
+        img.addEventListener('mouseleave', function() {
+            this.title = '';
+        });
+    });
 }
 
 /**
@@ -132,9 +153,9 @@ function getRandomPastelColor() {
     return {pastelColor, hoverColor};
 }
 
-function renderConfigForm() {
+function renderCategoriesConfigForm() {
     let categories = Object.keys(bingo);
-    let formDiv = document.getElementById("config");
+    let formDiv = document.getElementById("categories");
     let applyDiv = document.getElementById("apply");
     // Create a form
     let form = document.createElement("form");
@@ -164,8 +185,34 @@ function renderConfigForm() {
     formDiv.appendChild(form);
 }
 
+function renderGridSizeConfig() {
+    let formDiv = document.getElementById("grid_size");
+    let form = document.createElement("form");
+    let label = document.createElement("label");
+    label.htmlFor = "grid_size";
+    label.appendChild(document.createTextNode("Grid size: "));
+    form.appendChild(label);
+    let gridSizeInput = document.createElement("input");
+    gridSizeInput.type = "number";
+    gridSizeInput.id = "grid_size";
+    gridSizeInput.value = bingoGridSize.toString();
+    gridSizeInput.min = 3;
+    gridSizeInput.max = 6;
+    gridSizeInput.onchange = function () {
+        bingoGridSize = parseInt(gridSizeInput.value);
+        makeGrid("bingo_grid_p1");
+    }
+    form.appendChild(gridSizeInput);
+    formDiv.appendChild(form);
+
+}
+
+function renderConfig() {
+    renderCategoriesConfigForm();
+    renderGridSizeConfig();
+}
+
 window.onload = function () {
-    renderConfigForm();
+    renderConfig();
     makeGrid("bingo_grid_p1");
-    makeGrid("bingo_grid_p2");
 }

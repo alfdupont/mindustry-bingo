@@ -1,0 +1,345 @@
+# Postgame
+
+Extra Extreme Sector Capture
+Extra Eradication Sector Capture
+
+Place Foreshadow
+Place Spectre
+Place Meltdown
+
+Place Exponential Reconstructor
+Place Tetrative Reconstructor
+
+Create Vela 
+Create Corvus
+Create Scepter 
+Create Reign
+Create Arkyid 
+Create Toxopid
+Create Antumbra 
+Create Eclipse
+Create Quad 
+Create Oct
+Create Sei 
+Create Omura
+Create Aegires 
+Create Navanax 
+
+# Engame
+
+Nuclear Production Complex
+Impact 0078
+Naval Fortress
+Desolate Rift
+Planetary Launch Terminal
+Capture NPC Solar Only
+
+Get 20k Phase Fabric
+Get 20k Surge Alloy
+
+Place Airblast Drill
+Place Overdrive Projector
+Place Overdrive Dome
+Place Force Projector
+Place Core: Nucleus
+Place RTG Generator
+Place Thorium Reactor
+Place Impact Reactor
+Place Segment
+
+Working Impact Reactor 
+Working Overdrive Dome
+
+Overdrive Dome Router Chaining
+
+# Easy
+
+Get Copper
+Get Lead 
+Get Scrap
+Get Coal 
+Get Sand
+Get Graphite
+Get Silicon 
+Get Metaglass
+Get Water
+
+Ground Zero
+Frozen Forest
+
+Place Conveyor
+Place Junction
+Place Bridge Conveyor
+Place Sorter
+Place Inverted Sorter
+Place Router
+Place Distributor
+Place Overflow Gate
+Place Underflow Gate
+
+Place Graphite Press
+Place Silicon Smelter
+Place Kiln
+
+Place Mechanical Pump
+Place Conduit
+Place Liquid Junction
+Place Bridge Conduit
+Place Liquid Router
+
+Place Copper Wall
+Place Large Copper Wall
+Place Mechanical Drill
+Place Combustion Generator
+Place Power Node
+Place Battery
+Place Duo
+Place Scatter
+Place Scorch
+Place Hail
+Place Arc
+Place Mender
+
+# Random
+
+Router Chaining
+Thor Reactor Explosion
+Combustion Generator Explosion
+
+Water Extractor on Water
+Surge on Ground Zero
+Oil on Frozen Forest
+Boat on The Craters
+Cargo a Crawler
+Drown a Mace
+Surge Alloy on Armored Conveyor
+Every T1 on Biomass
+
+Nucleus on Ground Zero
+
+Kill an enemy with Thorium reactor
+Kill an enemy with Mass Driver
+Kill an Enemy with a Battery
+Surge Alloy Wall Kill
+Phase Wall Kill
+Kill an enemy with Crawlers
+Fill a Vault with Sand
+Set Oil on Fire
+All Around the Map Conveyor
+Control a Router in Front of a Guardian
+Loop a Mono on Payloads
+Incinerate Surge Alloy & Phase Fabric
+Give a Mender Phase Fabric
+
+Fill a Liquid Tank
+Fill 4 Liquid Tanks with every Liquid
+Rainbow Road 4 Lines
+Revive Derelict
+Kill a Guardian with Crawler
+
+# Sectors
+
+The Craters
+Biomass Synthesis Facility
+Ruinous Shores
+Stained Mountains
+Windswept Islands
+Fungal Pass
+Overgrowth
+Tar Fields
+Extraction Outpost
+Salt Flats
+Coastline
+
+Ruinous Shores Units Only
+
+Sector Capture Scrap Only
+Sector Capture Core Only
+
+Sector Capture with 2 Salvos
+Sector Capture One Turret Only
+Sector Capture Duos Only
+Sector Capture Units Only
+Sector Capture Power Only
+Sector Capture Mass Drivers Only
+Sector Capture Liquid Only
+Sector Capture Horizons Only
+Base Capture Daggers Only
+Base Capture Crawlers Only
+Base Capture Flares Only
+
+Extra Easy Sector Capture
+Extra Medium Sector Capture
+Extra High Sector Capture
+
+# Power
+
+Reach 1k Power
+Reach 5k Power
+Reach 10K Power
+Reach 100K Power
+
+Stock 1k Power
+Stock 5k Power
+Stock 10K Power
+Stock 100K Power
+
+Fill 10 Large Batteries
+Cover a sector with filled Batteries
+1k Power with Solar Panels
+
+# Resources
+
+Get Pyratite
+Get Spore 
+Get Titanium 
+Get Thorium 
+Get Plastanium
+Get Phase Fabric
+Get Surge Alloy
+Get Blast Compound
+
+Get 20k Copper
+Get 20k Lead 
+Get 20k Scrap
+Get 20k Coal 
+Get 20k Sand 
+Get 20k Graphite
+Get 20k Silicon 
+Get 20k Metaglass
+Get 20k Pyratite
+Get 20k Spore 
+Get 20k Titanium 
+Get 20k Thorium 
+Get 20k Plastanium
+Get 20k Blast Compound
+
+Get Slag
+Get Oil
+Get Cryofluid
+
+# Blocks
+
+Place Titanium Conveyor
+Place Plastanium Conveyor
+Place Armored Conveyor
+Place Phase Conveyor
+Place Mass Driver
+
+Place Titanium Wall
+Place Large Titanium Wall
+Place Thorium Wall
+Place Large Thorium Wall
+Place Plastanium Wall
+Place Large Plastanium Wall
+Place Phase Wall
+Place Large Phase Wall
+Place Surge Wall
+Place Large Surge Wall
+Place Door
+Place Large Door
+
+Place Pneumatic Drill
+Place Laser Drill
+Place Water Extractor
+Place Cultivator
+Place Oil Extractor
+
+Place Multi-Press
+Place Silicon Crucible
+Place Plastanium Compressor
+Place Phase Weaver
+Place Surge Smelter
+Place Pulverizer
+Place Melter
+Place Separator
+Place Disassembler
+Place Spore Press
+Place Coal Centrifuge
+Place Cryofluid Mixer
+Place Pyratite Mixer
+Place Blast Mixer
+Place Incinerator
+
+Place Steam Generator
+Place Thermal Generator
+Place Differential Generator
+Place Solar Panel
+Place Large Solar Panel
+Place Large Power Node 
+Place Surge Tower
+Place Large Battery
+Place Battery Diode
+
+Place Wave
+Place Lancer
+Place Parallax
+Place Swarmer
+Place Salvo
+Place Tsunami
+Place Fuse
+Place Ripple
+Place Cyclone 
+
+Place Repair Point
+Place Repair Turret
+Place Payload Conveyor
+Place Payload Router
+
+Place Mend Projector
+Place Container
+Place Vault
+Place Unloader
+Place Shock Mine
+Place Illuminator
+Place Launch Pad
+Place Core: Foundation
+
+Place Pulse Conduit
+Place Plated Conduit
+Place Phase Conduit
+Place Liquid Container
+Place Liquid Tank
+Place Rotary Pump
+Place Impulse Pump
+
+Place Micro Processor
+Place Logic Processor
+Place Hyper Processor
+Place Message
+Place Switch
+Place Memory Cell
+Place Memory Bank
+Place Logic Display
+Place Large Logic Display
+
+# Units
+
+Create Dagger 
+Create Mace 
+Create Fortress
+
+Create Nova 
+Create Pulsar
+Create Quasar
+
+Create Crawler
+Create Atrax 
+Create Spiroct 
+
+Create Flare 
+Create Horizon 
+Create Zenith 
+
+Create Mono 
+Create Poly 
+Create Mega 
+
+Create Risso 
+Create Minke 
+Create Bryde 
+
+Create Retusa 
+Create Oxynoe 
+Create Cyerce 
+
