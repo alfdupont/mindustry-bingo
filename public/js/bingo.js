@@ -1,3 +1,5 @@
+let gridState = [];
+
 /**
  * Create a square bingo grid with the given HTML id using random elements from the bingo array
  * @param {string} htmlId - The HTML id of the grid element
@@ -7,11 +9,14 @@ function makeGrid(htmlId, seed, gridSize) {
     let gridDiv = document.getElementById(htmlId);
     if (!gridSize) {
         gridSize = bingoGridSize;
+    } else {
+        gridSize = parseInt(gridSize);
     }
     let shuffledBingo = shuffle(bingo, seed, gridSize);
 
     let gridItems = shuffledBingo.slice(0, gridSize * gridSize);
     let grid = document.createElement("table");
+    gridState = Array(gridSize).fill().map(() => Array(gridSize).fill(0));
     for (let i = 0; i < gridSize; i++) {
         let row = document.createElement("tr");
         row.className = "bingo-row";
@@ -21,10 +26,17 @@ function makeGrid(htmlId, seed, gridSize) {
             let spritePath = matchDescriptionToSprite(item.description);
             cell.className = "bingo-cell";
             cell.innerHTML = makeCellHtml(item.description, spritePath);
-            cell.style.backgroundColor = "white";
-            cell.style.setProperty('--cell-hover-color', "#f0f0f0");
-            cell.addEventListener('click', function () {
-                toggleGreyOut(this);
+            updateCellAppearance(cell, gridState[i][j]);
+            cell.addEventListener('click', function (e) {
+                console.log("click");
+                console.log(e.button);
+                toggleCell(this, i, j, e.button === 0 ? 1 : 2);
+            });
+            cell.addEventListener('contextmenu', function (e) {
+                console.log("contextmenu");
+                console.log(e.button);
+                e.preventDefault();
+                toggleCell(this, i, j, 2);
             });
             row.appendChild(cell);
         }
@@ -85,17 +97,42 @@ function shuffle(complexGrid, seed, gridSize) {
     return array;
 }
 
-function toggleGreyOut(element) {
-    if (element.style.textDecoration === "line-through") {
-        element.style.textDecoration = "none";
-        element.style.backgroundColor = "white";
-        element.style.setProperty('--cell-hover-color', "#f0f0f0");
-        element.style.color = "#0f0f0f";
-    } else {
-        element.style.textDecoration = "line-through";
-        element.style.backgroundColor = "#2e3330";
-        element.style.setProperty('--cell-hover-color', "#434644");
-        element.style.color = "aquamarine";
+function toggleCell(element, row, col, player) {
+    let currentState = gridState[row][col];
+    console.log("toggleCell", row, col, player, currentState);
+    if (player === 1) {
+        if (currentState === 0 || currentState === 2) {
+            gridState[row][col] += 1;
+        } else {
+            gridState[row][col] -= 1;
+        }
+    } else if (player === 2) {
+        if (currentState === 0 || currentState === 1) {
+            gridState[row][col] += 2;
+        } else {
+            gridState[row][col] -= 2;
+        }
+    }
+
+    console.log("gridState", gridState[row][col]);
+    updateCellAppearance(element, gridState[row][col]);
+}
+
+function updateCellAppearance(element, state) {
+    element.classList.remove('no-player', 'player1', 'player2', 'both-players');
+    switch (state) {
+        case 0:
+            element.classList.add('no-player');
+            break;
+        case 1:
+            element.classList.add('player1');
+            break;
+        case 2:
+            element.classList.add('player2');
+            break;
+        case 3:
+            element.classList.add('both-players');
+            break;
     }
 }
 
@@ -173,7 +210,7 @@ function renderCategoriesConfigForm() {
     let button = document.createElement("button");
     button.innerHTML = "Apply";
     button.onclick = function () {
-        makeGrid("bingo_grid_p1", generateRandomSeed());
+        makeGrid("bingo_grid_p1", generateRandomSeed(), bingoGridSize);
     }
     applyDiv.appendChild(button);
     formDiv.appendChild(form);
@@ -215,7 +252,7 @@ function generateRandomSeed() {
 
 // xmur3 hash function
 function xmur3(str) {
-    for(let i = 0, h = 1779033703 ^ str.length; i < str.length; i++)
+    for(var i = 0, h = 1779033703 ^ str.length; i < str.length; i++)
         h = Math.imul(h ^ str.charCodeAt(i), 3432918353),
         h = h << 13 | h >>> 19;
     return function() {
@@ -226,9 +263,8 @@ function xmur3(str) {
 }
 
 function regenerateGrid(htmlId) {
-    makeGrid(htmlId, generateRandomSeed());
+    makeGrid(htmlId, generateRandomSeed(), bingoGridSize);
 }
-
 
 window.onload = function () {
     // Check if there's a seed in the URL
