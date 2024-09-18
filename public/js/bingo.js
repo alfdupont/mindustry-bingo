@@ -1,10 +1,11 @@
 /**
  * Create a square bingo grid with the given HTML id using random elements from the bingo array
  * @param {string} htmlId - The HTML id of the grid element
+ * @param {string} seed - The seed for the random number generator
  */
-function makeGrid(htmlId) {
+function makeGrid(htmlId, seed) {
     let gridDiv = document.getElementById(htmlId);
-    let shuffledBingo = shuffle(bingo);
+    let shuffledBingo = shuffle(bingo, seed);
     let gridItems = shuffledBingo.slice(0, bingoGridSize * bingoGridSize);
     let grid = document.createElement("table");
     for (let i = 0; i < bingoGridSize; i++) {
@@ -37,9 +38,10 @@ function makeGrid(htmlId) {
 /**
  * Shuffle a bingo definition using the Fisher-Yates algorithm
  * @param {Object} complexGrid - The bingo definition to shuffle
+ * @param {string} seed - The seed for the random number generator
  * @returns {Array} The shuffled array
  */
-function shuffle(complexGrid) {
+function shuffle(complexGrid, seed) {
     let grid = [];
     
     // get configuration
@@ -67,9 +69,12 @@ function shuffle(complexGrid) {
     }
     errorDiv.innerHTML = "";
     
+    // Use the seed to create a random number generator
+    let rng = xmur3(seed);
+    
     let array = grid.slice();
     for (let i = array.length - 1; i > 0; i--) {
-        let j = Math.floor(Math.random() * (i + 1));
+        let j = Math.floor(rng() / 4294967296 * (i + 1));
         let temp = array[i];
         array[i] = array[j];
         array[j] = temp;
@@ -212,7 +217,55 @@ function renderConfig() {
     renderGridSizeConfig();
 }
 
+// generate a random seed
+function generateRandomSeed() {
+    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+}
+
+// xmur3 hash function
+function xmur3(str) {
+    for(var i = 0, h = 1779033703 ^ str.length; i < str.length; i++)
+        h = Math.imul(h ^ str.charCodeAt(i), 3432918353),
+        h = h << 13 | h >>> 19;
+    return function() {
+        h = Math.imul(h ^ h >>> 16, 2246822507);
+        h = Math.imul(h ^ h >>> 13, 3266489909);
+        return (h ^= h >>> 16) >>> 0;
+    }
+}
+
+function regenerateGrid(htmlId) {
+    seed = generateRandomSeed();
+    makeGrid(htmlId, seed);
+    window.history.replaceState({}, '', `${window.location.pathname}?seed=${seed}`);
+}
+
+
 window.onload = function () {
     renderConfig();
-    makeGrid("bingo_grid_p1");
+    // Check if there's a seed in the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    let seed = urlParams.get('seed');
+    
+    if (!seed) {
+        // If no seed in URL, generate a new one
+        seed = generateRandomSeed();
+        // Update the URL with the new seed
+        window.history.replaceState({}, '', `${window.location.pathname}?seed=${seed}`);
+    }
+
+    makeGrid("bingo_grid_p1", seed);
+
+    // Add a "Share" button
+    let shareButton = document.createElement("button");
+    shareButton.innerHTML = "Share";
+    shareButton.onclick = function () {
+        let shareUrl = `${window.location.origin}${window.location.pathname}?seed=${seed}`;
+        navigator.clipboard.writeText(shareUrl).then(function() {
+            alert("Share link copied to clipboard!");
+        }, function(err) {
+            console.error('Could not copy text: ', err);
+        });
+    }
+    document.body.appendChild(shareButton);
 }

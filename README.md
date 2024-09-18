@@ -5,9 +5,9 @@ https://alfred456654.gitlab.io/mindustry-bingo/
 ## Notes
 
 - [X] tooltip sur les items
-- [ ] tous les items carrés
+- [X] tous les items carrés
 - [ ] trouver une manière alternative de représenter la complétion par l'une ou l'autre des équipes, voire les deux
-- [ ] option de partage de grille (URL)
+- [X] option de partage de grille (URL)
 - [ ] bonus : animation sur complétion d'une ligne
 - [ ] couleurs équipes : rose + bleu (trouver teintes compatibles avec police de caractères en noir)
 
