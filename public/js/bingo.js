@@ -239,14 +239,14 @@ function matchDescriptionToSprite(description) {
     return fallbackSprite;
 }
 
-function renderCategoriesConfigForm(categories, seed) {
+function renderCategoriesConfigForm(categories) {
     if (!categories) {
         categories = Object.keys(bingo);
     }
     let formDiv = document.getElementById("categories");
     let applyDiv = document.getElementById("apply");
     let form = createCategoriesForm(allCategories, categories);
-    let button = createApplyButton(seed);
+    let button = createApplyButton();
     applyDiv.appendChild(button);
     formDiv.appendChild(form);
 }
@@ -280,11 +280,15 @@ function createLabel(element) {
     return label;
 }
 
-function createApplyButton(seed) {
+function getSelectedCategories() {
+    return Array.from(document.querySelectorAll("#categories input:checked")).map(checkbox => checkbox.id);
+}
+
+function createApplyButton() {
     let button = document.createElement("button");
     button.innerHTML = "Apply";
     button.onclick = function () {
-        let selectedCategories = Array.from(document.querySelectorAll("#categories input:checked")).map(checkbox => checkbox.id);
+        let selectedCategories = getSelectedCategories();
         makeGrid("bingo_grid_p1", generateRandomSeed(), bingoGridSize, selectedCategories);
     }
     return button;
@@ -340,16 +344,15 @@ function createGridSizeInput() {
     gridSizeInput.min = "3";
     gridSizeInput.max = "6";
     gridSizeInput.onchange = function () {
-        let selectedCategories = Array.from(document.querySelectorAll("#categories input:checked")).map(checkbox => checkbox.id);
-        let categoriesSum = computeCategoriesSum(selectedCategories);
+        let selectedCategories = getSelectedCategories();
         bingoGridSize = parseInt(gridSizeInput.value);
         makeGrid("bingo_grid_p1", generateRandomSeed(), bingoGridSize, selectedCategories);
     }
     return gridSizeInput;
 }
 
-function renderConfig(gridSize, categories, seed) {
-    renderCategoriesConfigForm(categories, seed);
+function renderConfig(gridSize, categories) {
+    renderCategoriesConfigForm(categories);
     renderGridSizeConfig(gridSize);
 }
 
@@ -366,7 +369,7 @@ function generateRandomSeed() {
 function xmur3(str) {
     for(var i = 0, h = 1779033703 ^ str.length; i < str.length; i++)
         h = Math.imul(h ^ str.charCodeAt(i), 3432918353),
-        h = h << 13 | h >>> 19;
+            h = h << 13 | h >>> 19;
     return function() {
         h = Math.imul(h ^ h >>> 16, 2246822507);
         h = Math.imul(h ^ h >>> 13, 3266489909);
@@ -375,7 +378,7 @@ function xmur3(str) {
 }
 
 function regenerateGrid(htmlId) {
-    let selectedCategories = Array.from(document.querySelectorAll("#categories input:checked")).map(checkbox => checkbox.id);
+    let selectedCategories = getSelectedCategories();
     makeGrid(htmlId, generateRandomSeed(), bingoGridSize, selectedCategories);
 }
 
@@ -386,6 +389,6 @@ window.onload = function () {
     let categoriesSum = parseInt(urlParams.get('categories')) || -1;
     let categories = parseCategoriesFromSum(categoriesSum);
 
-    renderConfig(gridSize, categories, seed);
+    renderConfig(gridSize, categories);
     makeGrid("bingo_grid_p1", seed, gridSize, categories);
 }
