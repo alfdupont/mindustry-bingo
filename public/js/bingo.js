@@ -3,23 +3,26 @@
  * @param {string} htmlId - The HTML id of the grid element
  * @param {string} seed - The seed for the random number generator
  */
-function makeGrid(htmlId, seed) {
+function makeGrid(htmlId, seed, gridSize) {
     let gridDiv = document.getElementById(htmlId);
-    let shuffledBingo = shuffle(bingo, seed);
-    let gridItems = shuffledBingo.slice(0, bingoGridSize * bingoGridSize);
+    if (!gridSize) {
+        gridSize = bingoGridSize;
+    }
+    let shuffledBingo = shuffle(bingo, seed, gridSize);
+
+    let gridItems = shuffledBingo.slice(0, gridSize * gridSize);
     let grid = document.createElement("table");
-    for (let i = 0; i < bingoGridSize; i++) {
+    for (let i = 0; i < gridSize; i++) {
         let row = document.createElement("tr");
         row.className = "bingo-row";
-        for (let j = 0; j < bingoGridSize; j++) {
-            let item = gridItems[i * bingoGridSize + j];
+        for (let j = 0; j < gridSize; j++) {
+            let item = gridItems[i * gridSize + j];
             let cell = document.createElement("td");
             let spritePath = matchDescriptionToSprite(item.description);
             cell.className = "bingo-cell";
             cell.innerHTML = makeCellHtml(item.description, spritePath);
-            const bgColors = getRandomPastelColor();
-            cell.style.backgroundColor = bgColors.pastelColor;
-            cell.style.setProperty('--cell-hover-color', bgColors.hoverColor);
+            cell.style.backgroundColor = "white";
+            cell.style.setProperty('--cell-hover-color', "#f0f0f0");
             cell.addEventListener('click', function () {
                 toggleGreyOut(this);
             });
@@ -27,21 +30,24 @@ function makeGrid(htmlId, seed) {
         }
         grid.appendChild(row);
     }
-    let gWidth = bingoGridSize * 120;
-    let gHeight = bingoGridSize * 120;
+    let gWidth = gridSize * 120;
+    let gHeight = gridSize * 120;
     grid.style.width = `${gWidth}px`;
     grid.style.height = `${gHeight}px`;
     gridDiv.innerHTML = "";
     gridDiv.appendChild(grid);
+    // Update the URL with the new seed
+    window.history.replaceState({}, '', `${window.location.pathname}?seed=${seed}&gridSize=${gridSize}`);
 }
 
 /**
  * Shuffle a bingo definition using the Fisher-Yates algorithm
  * @param {Object} complexGrid - The bingo definition to shuffle
  * @param {string} seed - The seed for the random number generator
+ * @param {number} gridSize - The size of the grid
  * @returns {Array} The shuffled array
  */
-function shuffle(complexGrid, seed) {
+function shuffle(complexGrid, seed, gridSize) {
     let grid = [];
     
     // get configuration
@@ -60,7 +66,7 @@ function shuffle(complexGrid, seed) {
     }
 
     let errorDiv = document.getElementById("error");
-    if (grid.length < bingoGridSize * bingoGridSize) {
+    if (grid.length < gridSize * gridSize) {
         console.error("Not enough items to fill the grid. Please select more categories.");
         // display error in pop up
         errorDiv.innerHTML = "Not enough items to fill the grid. Please select more categories.";
@@ -85,9 +91,8 @@ function shuffle(complexGrid, seed) {
 function toggleGreyOut(element) {
     if (element.style.textDecoration === "line-through") {
         element.style.textDecoration = "none";
-        const bgColors = getRandomPastelColor();
-        element.style.backgroundColor = bgColors.pastelColor;
-        element.style.setProperty('--cell-hover-color', bgColors.hoverColor);
+        element.style.backgroundColor = "white";
+        element.style.setProperty('--cell-hover-color', "#f0f0f0");
         element.style.color = "#0f0f0f";
     } else {
         element.style.textDecoration = "line-through";
@@ -146,18 +151,6 @@ function matchDescriptionToSprite(description) {
     return fallbackSprite;
 }
 
-function getRandomPastelColor() {
-    const hue = Math.random() * 60 + 180; // pick a hue between 180 and 240 degrees
-    const saturation = '50%'; // set saturation to 50%
-    const lightness = Math.random() * 30 + 70 + '%'; // pick a lightness between 70% and 100%
-    const alpha = 1; // set alpha to fully opaque
-
-    const pastelColor = `hsla(${hue}, ${saturation}, ${lightness}, ${alpha})`;
-    const hoverColor = `hsla(${hue}, ${saturation}, calc(${lightness} - 10%), ${alpha})`;
-
-    return {pastelColor, hoverColor};
-}
-
 function renderCategoriesConfigForm() {
     let categories = Object.keys(bingo);
     let formDiv = document.getElementById("categories");
@@ -183,8 +176,7 @@ function renderCategoriesConfigForm() {
     let button = document.createElement("button");
     button.innerHTML = "Apply";
     button.onclick = function () {
-        makeGrid("bingo_grid_p1");
-        makeGrid("bingo_grid_p2");
+        makeGrid("bingo_grid_p1", generateRandomSeed());
     }
     applyDiv.appendChild(button);
     formDiv.appendChild(form);
@@ -205,11 +197,10 @@ function renderGridSizeConfig() {
     gridSizeInput.max = 6;
     gridSizeInput.onchange = function () {
         bingoGridSize = parseInt(gridSizeInput.value);
-        makeGrid("bingo_grid_p1");
+        makeGrid("bingo_grid_p1", generateRandomSeed(), bingoGridSize);
     }
     form.appendChild(gridSizeInput);
     formDiv.appendChild(form);
-
 }
 
 function renderConfig() {
@@ -235,9 +226,7 @@ function xmur3(str) {
 }
 
 function regenerateGrid(htmlId) {
-    seed = generateRandomSeed();
-    makeGrid(htmlId, seed);
-    window.history.replaceState({}, '', `${window.location.pathname}?seed=${seed}`);
+    makeGrid(htmlId, generateRandomSeed());
 }
 
 
@@ -246,21 +235,18 @@ window.onload = function () {
     // Check if there's a seed in the URL
     const urlParams = new URLSearchParams(window.location.search);
     let seed = urlParams.get('seed');
-    
     if (!seed) {
         // If no seed in URL, generate a new one
         seed = generateRandomSeed();
-        // Update the URL with the new seed
-        window.history.replaceState({}, '', `${window.location.pathname}?seed=${seed}`);
     }
-
-    makeGrid("bingo_grid_p1", seed);
+    let gridSize = urlParams.get('gridSize');
+    makeGrid("bingo_grid_p1", seed, gridSize);
 
     // Add a "Share" button
     let shareButton = document.createElement("button");
     shareButton.innerHTML = "Share";
     shareButton.onclick = function () {
-        let shareUrl = `${window.location.origin}${window.location.pathname}?seed=${seed}`;
+        let shareUrl = `${window.location.origin}${window.location.pathname}?seed=${seed}&gridSize=${bingoGridSize}`;
         navigator.clipboard.writeText(shareUrl).then(function() {
             alert("Share link copied to clipboard!");
         }, function(err) {
