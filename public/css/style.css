@@ -151,3 +151,13 @@ button {
 .bingo-cell:hover.both-players::before {
     background: linear-gradient(to bottom right, var(--p1bgcolorhover) 0%, var(--p1bgcolorhover) 50%, var(--p2bgcolorhover) 50%, var(--p2bgcolorhover) 100%); /* Slightly darker gradient */
 }
+
+@keyframes lineComplete {
+    0% { background-color: yellow; }
+    50% { background-color: red; }
+    100% { background-color: yellow; }
+}
+
+.line-complete {
+    animation: lineComplete 1s ease-in-out;
+}

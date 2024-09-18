@@ -117,6 +117,54 @@ function toggleCell(element, row, col, player) {
 
     console.log("gridState", gridState[row][col]);
     updateCellAppearance(element, gridState[row][col]);
+    checkLineCompletion(row, col, player);
+}
+
+function checkLineCompletion(row, col, player) {
+    let gridSize = gridState.length;
+    let playerValue = player === 1 ? 1 : 2;
+    let lineComplete = true;
+
+    // Check row
+    for (let i = 0; i < gridSize; i++) {
+        if (gridState[row][i] !== playerValue && gridState[row][i] !== 3) {
+            lineComplete = false;
+            break;
+        }
+    }
+    if (lineComplete) {
+        animateLineCompletion(row, null);
+        return;
+    }
+
+    // Check column
+    lineComplete = true;
+    for (let i = 0; i < gridSize; i++) {
+        if (gridState[i][col] !== playerValue && gridState[i][col] !== 3) {
+            lineComplete = false;
+            break;
+        }
+    }
+    if (lineComplete) {
+        animateLineCompletion(null, col);
+    }
+}
+
+function animateLineCompletion(row, col) {
+    let gridSize = gridState.length;
+    if (row !== null) {
+        for (let i = 0; i < gridSize; i++) {
+            let cell = document.querySelector(`#bingo_grid_p1 tr:nth-child(${row + 1}) td:nth-child(${i + 1})`);
+            cell.classList.add('line-complete');
+            setTimeout(() => cell.classList.remove('line-complete'), 1000);
+        }
+    } else if (col !== null) {
+        for (let i = 0; i < gridSize; i++) {
+            let cell = document.querySelector(`#bingo_grid_p1 tr:nth-child(${i + 1}) td:nth-child(${col + 1})`);
+            cell.classList.add('line-complete');
+            setTimeout(() => cell.classList.remove('line-complete'), 1000);
+        }
+    }
 }
 
 function updateCellAppearance(element, state) {
