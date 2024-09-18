@@ -78,6 +78,7 @@ let bingo = {
         {"id": "build_copper_wall", "description": "Place Copper Wall"},
         {"id": "build_large_copper_wall", "description": "Place Large Copper Wall"},
         {"id": "build_mechanical_drill", "description": "Place Mechanical Drill"},
+        {"id": "build_pneumatic_drill", "description": "Place Pneumatic Drill"},
         {"id": "build_combustion_generator", "description": "Place Combustion Generator"},
         {"id": "build_power_node", "description": "Place Power Node"},
         {"id": "build_battery", "description": "Place Battery"},
