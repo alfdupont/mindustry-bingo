@@ -1,3 +1,10 @@
+:root {
+    --p1bgcolor: #7799FF;
+    --p2bgcolor: pink;
+    --p1bgcolorhover: #5a7acc;
+    --p2bgcolorhover: #eeb0b9;
+}
+
 body {
     background-color: #2e3330;
     font-family: Arial, sans-serif;
@@ -111,11 +118,11 @@ button {
 }
 
 .player1 {
-    background-color: #7799FF;
+    background-color: var(--p1bgcolor);
 }
 
 .player2 {
-    background-color: pink;
+    background-color: var(--p2bgcolor);
 }
 
 .both-players::before {
@@ -125,6 +132,22 @@ button {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(to bottom right, #7799FF 0%, #7799FF 50%, pink 50%, pink 100%);
+    background: linear-gradient(to bottom right, var(--p1bgcolor) 0%, var(--p1bgcolor) 50%, var(--p2bgcolor) 50%, var(--p2bgcolor) 100%);
     z-index: -1;
+}
+
+.bingo-cell:hover.no-player {
+    background-color: #e0e0e0; /* Slightly darker than white */
+}
+
+.bingo-cell:hover.player1 {
+    background-color: var(--p1bgcolorhover); /* Slightly darker than var(--p1bgcolor) */
+}
+
+.bingo-cell:hover.player2 {
+    background-color: var(--p2bgcolorhover); /* Slightly darker than pink */
+}
+
+.bingo-cell:hover.both-players::before {
+    background: linear-gradient(to bottom right, var(--p1bgcolorhover) 0%, var(--p1bgcolorhover) 50%, var(--p2bgcolorhover) 50%, var(--p2bgcolorhover) 100%); /* Slightly darker gradient */
 }
