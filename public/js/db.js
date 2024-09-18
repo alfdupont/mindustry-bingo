@@ -309,7 +309,7 @@ let bingo = {
 
 let bingoGridSize = 5;
 
-let sprites = {
+let oldsprites = {
     "additive-reconstructor": "assets/oldsprites/additive-reconstructor.png",
     "aegires": "assets/oldsprites/aegires.png",
     "airblast-drill": "assets/oldsprites/airblast-drill.png",

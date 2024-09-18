@@ -208,7 +208,7 @@ function updateCellAppearance(element, state) {
 function makeCellHtml(itemDescription, sprite) {
     return `
         <div class="sprite">
-            <img src="${sprite}" alt="" />
+            <img src="${sprite}" alt="" onerror="this.onerror=null;this.src=matchDescriptionToSprite('${itemDescription}');" />
             <span class="custom-tooltip">${itemDescription}</span>
         </div>
     `;
@@ -226,7 +226,7 @@ function getSpriteFromId(id) {
 function matchDescriptionToSprite(description) {
     let modifiedDescription = description.toLowerCase().replace(/[^a-z0-9]/g, '');
     let matches = [];
-    for (let spriteName in sprites) {
+    for (let spriteName in oldsprites) {
         let modifiedSpriteName = spriteName.toLowerCase().replace(/[^a-z0-9]/g, '');
         if (modifiedDescription.indexOf(modifiedSpriteName) !== -1) {
             matches.push(spriteName);
@@ -240,7 +240,7 @@ function matchDescriptionToSprite(description) {
                 longestMatch = matches[i];
             }
         }
-        return sprites[longestMatch];
+        return oldsprites[longestMatch];
     }
     console.error('No sprite found for description: ' + description)
     return fallbackSprite;
