@@ -4,6 +4,7 @@ let gridState = [];
  * Create a square bingo grid with the given HTML id using random elements from the bingo array
  * @param {string} htmlId - The HTML id of the grid element
  * @param {string} seed - The seed for the random number generator
+ * @param gridSize - The size of the grid
  */
 function makeGrid(htmlId, seed, gridSize) {
     let gridDiv = document.getElementById(htmlId);
@@ -146,17 +147,6 @@ function makeCellHtml(itemDescription, sprite) {
     `;
 }
 
-function setupInstantTooltips() {
-    document.querySelectorAll('.sprite img').forEach(img => {
-        img.addEventListener('mouseenter', function() {
-            this.title = this.dataset.title;
-        });
-        img.addEventListener('mouseleave', function() {
-            this.title = '';
-        });
-    });
-}
-
 /**
  * Find sprite corresponding to provided description
  * @param {string} description - description of the bingo card
@@ -230,8 +220,8 @@ function renderGridSizeConfig(gridSize) {
     gridSizeInput.type = "number";
     gridSizeInput.id = "grid_size";
     gridSizeInput.value = bingoGridSize.toString();
-    gridSizeInput.min = 3;
-    gridSizeInput.max = 6;
+    gridSizeInput.min = "3";
+    gridSizeInput.max = "6";
     gridSizeInput.onchange = function () {
         bingoGridSize = parseInt(gridSizeInput.value);
         makeGrid("bingo_grid_p1", generateRandomSeed(), bingoGridSize);
