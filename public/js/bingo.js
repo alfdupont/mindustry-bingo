@@ -52,12 +52,9 @@ function shuffle(complexGrid, seed, gridSize) {
     
     // get configuration
     let config = document.querySelector("form");
-    let checkedCategories = [];
-    for (const element of config) {
-        if (element.checked) {
-            checkedCategories.push(element.id);
-        }
-    }
+    let checkedCategories = Array.from(config.elements)
+        .filter(element => element.checked)
+        .map(element => element.id);
     for (let sectionName in complexGrid) {
         if (!checkedCategories.includes(sectionName)) {
             continue;
@@ -182,7 +179,10 @@ function renderCategoriesConfigForm() {
     formDiv.appendChild(form);
 }
 
-function renderGridSizeConfig() {
+function renderGridSizeConfig(gridSize) {
+    if (gridSize) {
+        bingoGridSize = gridSize;
+    }
     let formDiv = document.getElementById("grid_size");
     let form = document.createElement("form");
     let label = document.createElement("label");
@@ -203,9 +203,9 @@ function renderGridSizeConfig() {
     formDiv.appendChild(form);
 }
 
-function renderConfig() {
+function renderConfig(gridSize) {
     renderCategoriesConfigForm();
-    renderGridSizeConfig();
+    renderGridSizeConfig(gridSize);
 }
 
 // generate a random seed
@@ -215,7 +215,7 @@ function generateRandomSeed() {
 
 // xmur3 hash function
 function xmur3(str) {
-    for(var i = 0, h = 1779033703 ^ str.length; i < str.length; i++)
+    for(let i = 0, h = 1779033703 ^ str.length; i < str.length; i++)
         h = Math.imul(h ^ str.charCodeAt(i), 3432918353),
         h = h << 13 | h >>> 19;
     return function() {
@@ -231,7 +231,6 @@ function regenerateGrid(htmlId) {
 
 
 window.onload = function () {
-    renderConfig();
     // Check if there's a seed in the URL
     const urlParams = new URLSearchParams(window.location.search);
     let seed = urlParams.get('seed');
@@ -240,6 +239,7 @@ window.onload = function () {
         seed = generateRandomSeed();
     }
     let gridSize = urlParams.get('gridSize');
+    renderConfig(gridSize);
     makeGrid("bingo_grid_p1", seed, gridSize);
 
     // Add a "Share" button
