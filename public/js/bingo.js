@@ -34,7 +34,10 @@ function makeGrid(htmlId, seed, gridSize, categories) {
         for (let j = 0; j < gridSize; j++) {
             let item = gridItems[i * gridSize + j];
             let cell = document.createElement("td");
-            let spritePath = matchDescriptionToSprite(item.description);
+            let spritePath = getSpriteFromId(item.id);
+            if (!spritePath) {
+                spritePath = matchDescriptionToSprite(item.description);
+            }
             cell.className = "bingo-cell";
             cell.innerHTML = makeCellHtml(item.description, spritePath);
             updateCellAppearance(cell, gridState[i][j]);
@@ -209,6 +212,10 @@ function makeCellHtml(itemDescription, sprite) {
             <span class="custom-tooltip">${itemDescription}</span>
         </div>
     `;
+}
+
+function getSpriteFromId(id) {
+    return `assets/sprites/${id}.png`;
 }
 
 /**
