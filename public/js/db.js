@@ -5,8 +5,6 @@ let bingo = {
         {"id": "build_foreshadow", "description": "Place Foreshadow"},
         {"id": "build_spectre", "description": "Place Spectre"},
         {"id": "build_meltdown", "description": "Place Meltdown"},
-        {"id": "build_exponential_reconstructor", "description": "Place Exponential Reconstructor"},
-        {"id": "build_tetrative_reconstructor", "description": "Place Tetrative Reconstructor"},
         {"id": "unit_vela", "description": "Create Vela"},
         {"id": "unit_corvus", "description": "Create Corvus"},
         {"id": "unit_scepter", "description": "Create Scepter"},
