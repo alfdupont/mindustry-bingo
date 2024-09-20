@@ -35,9 +35,6 @@ function makeGrid(htmlId, seed, gridSize, categories) {
             let item = gridItems[i * gridSize + j];
             let cell = document.createElement("td");
             let spritePath = getSpriteFromId(item.id);
-            if (!spritePath) {
-                spritePath = matchDescriptionToSprite(item.description);
-            }
             cell.className = "bingo-cell";
             cell.innerHTML = makeCellHtml(item.description, spritePath);
             updateCellAppearance(cell, gridState[i][j]);
@@ -240,6 +237,7 @@ function matchDescriptionToSprite(description) {
                 longestMatch = matches[i];
             }
         }
+        console.error("reverted to fallback sprite for description: " + description);
         return oldsprites[longestMatch];
     }
     console.error('No sprite found for description: ' + description)
