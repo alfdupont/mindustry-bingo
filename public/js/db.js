@@ -128,6 +128,7 @@ let bingo = {
         {"id": "fill_liquid_tank", "description": "Fill a Liquid Tank"},
         {"id": "fill_4_liquid_tanks", "description": "Fill 4 Liquid Tanks with every Liquid"},
         {"id": "spice_road", "description": "Spice Road 4 Lines"},
+        {"id": "rainbow_road", "description": "Rainbow Road 4 Lines"},
         {"id": "revive_derelict", "description": "Revive Derelict"},
         {"id": "guardian_crawler", "description": "Kill a Guardian with Crawler"}
     ],
