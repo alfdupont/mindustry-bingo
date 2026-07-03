@@ -150,8 +150,7 @@ function checkLineCompletion(row, col, player) {
         }
     }
     if (lineComplete) {
-        animateLineCompletion(row, null);
-        return;
+        animateLineCompletion('row', row);
     }
 
     // Check column
@@ -163,25 +162,62 @@ function checkLineCompletion(row, col, player) {
         }
     }
     if (lineComplete) {
-        animateLineCompletion(null, col);
+        animateLineCompletion('col', col);
+    }
+
+    // Check main diagonal (top-left to bottom-right)
+    if (row === col) {
+        lineComplete = true;
+        for (let i = 0; i < gridSize; i++) {
+            if (gridState[i][i] !== playerValue && gridState[i][i] !== 3) {
+                lineComplete = false;
+                break;
+            }
+        }
+        if (lineComplete) {
+            animateLineCompletion('diagonal', null);
+        }
+    }
+
+    // Check anti-diagonal (top-right to bottom-left)
+    if (row + col === gridSize - 1) {
+        lineComplete = true;
+        for (let i = 0; i < gridSize; i++) {
+            if (gridState[i][gridSize - 1 - i] !== playerValue && gridState[i][gridSize - 1 - i] !== 3) {
+                lineComplete = false;
+                break;
+            }
+        }
+        if (lineComplete) {
+            animateLineCompletion('anti-diagonal', null);
+        }
     }
 }
 
-function animateLineCompletion(row, col) {
+function animateLineCompletion(type, index) {
     let gridSize = gridState.length;
-    if (row !== null) {
+    let cells = [];
+    if (type === 'row') {
         for (let i = 0; i < gridSize; i++) {
-            let cell = document.querySelector(`#bingo_grid_p1 tr:nth-child(${row + 1}) td:nth-child(${i + 1})`);
-            cell.classList.add('line-complete');
-            setTimeout(() => cell.classList.remove('line-complete'), 1000);
+            cells.push(document.querySelector(`#bingo_grid_p1 tr:nth-child(${index + 1}) td:nth-child(${i + 1})`));
         }
-    } else if (col !== null) {
+    } else if (type === 'col') {
         for (let i = 0; i < gridSize; i++) {
-            let cell = document.querySelector(`#bingo_grid_p1 tr:nth-child(${i + 1}) td:nth-child(${col + 1})`);
-            cell.classList.add('line-complete');
-            setTimeout(() => cell.classList.remove('line-complete'), 1000);
+            cells.push(document.querySelector(`#bingo_grid_p1 tr:nth-child(${i + 1}) td:nth-child(${index + 1})`));
+        }
+    } else if (type === 'diagonal') {
+        for (let i = 0; i < gridSize; i++) {
+            cells.push(document.querySelector(`#bingo_grid_p1 tr:nth-child(${i + 1}) td:nth-child(${i + 1})`));
+        }
+    } else if (type === 'anti-diagonal') {
+        for (let i = 0; i < gridSize; i++) {
+            cells.push(document.querySelector(`#bingo_grid_p1 tr:nth-child(${i + 1}) td:nth-child(${gridSize - i})`));
         }
     }
+    cells.forEach(cell => {
+        cell.classList.add('line-complete');
+        setTimeout(() => cell.classList.remove('line-complete'), 1000);
+    });
 }
 
 function updateCellAppearance(element, state) {
