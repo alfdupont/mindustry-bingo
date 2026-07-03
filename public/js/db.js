@@ -97,7 +97,7 @@ let bingo = {
         {"id": "oil_frozen_forest", "description": "Oil on Frozen Forest"},
         {"id": "boat_craters", "description": "Boat on The Craters"},
         {"id": "cargo_crawler", "description": "Cargo a Crawler"},
-        {"id": "drown_mace", "description": "Drown a Macer"},
+        {"id": "drown_mace", "description": "Drown a Mace"},
         {"id": "surge_on_armored", "description": "Surge Alloy on Armored Conveyor"},
         {"id": "all_t1_biomass", "description": "Every T1 on Biomass"},
         {"id": "nucleus_gzero", "description": "Nucleus on Ground Zero"},
