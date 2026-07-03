@@ -1,3 +1,3 @@
 # Mindustry Bingo
 
-https://alfred456654.gitlab.io/mindustry-bingo/
+https://alfdupont.github.io/mindustry-bingo
