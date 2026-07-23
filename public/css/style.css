@@ -24,7 +24,7 @@ body {
     display: flex;
 }
 
-#categories, #grid_size {
+#categories, #grid_size, #card_id {
     margin: 10px;
 }
 
