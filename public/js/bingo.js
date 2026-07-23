@@ -330,7 +330,7 @@ function getSelectedCategories() {
 function createApplyButton() {
     let button = document.createElement("button");
     button.innerHTML = "Apply";
-    button.onclick = regenerateGrid;
+    button.onclick = () => regenerateGrid("bingo_grid_p1");
     return button;
 }
 
