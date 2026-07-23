@@ -294,6 +294,8 @@ function renderCategoriesConfigForm(categories) {
 
 function createCategoriesForm(allCategories, categories) {
     let form = document.createElement("form");
+    // disable form submission (prevents unnecessary page reloads)
+    form.onsubmit = (e) => { e.preventDefault(); }
     for (const element of allCategories) {
         // Check if the category is selected
         let checked = categories.includes(element);
@@ -360,6 +362,8 @@ function renderGridSizeConfig(gridSize) {
 
 function createGridSizeForm() {
     let form = document.createElement("form");
+    // disable form submission (prevents unnecessary page reloads)
+    form.onsubmit = (e) => { e.preventDefault(); }
     let label = createGridSizeLabel();
     form.appendChild(label);
     let gridSizeInput = createGridSizeInput();
@@ -400,6 +404,8 @@ function renderCardSeedConfig(seed) {
 
 function createCardSeedForm() {
     let form = document.createElement("form");
+    // disable form submission (prevents unnecessary page reloads)
+    form.onsubmit = (e) => { e.preventDefault(); }
     let label = createCardSeedLabel();
     form.appendChild(label);
     let cardIdInput = createCardSeedInput();
