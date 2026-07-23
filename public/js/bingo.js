@@ -461,7 +461,11 @@ function xmur3(str) {
 
 function regenerateGrid(htmlId) {
     let selectedCategories = getSelectedCategories();
-    renderCardSeedConfig(bingoSeed);
+    // keep the seed input in sync without rebuilding the form (preserves focus)
+    let cardSeedInput = document.querySelector("#card_id input");
+    if (cardSeedInput) {
+        cardSeedInput.value = bingoSeed;
+    }
     makeGrid(htmlId, bingoSeed, bingoGridSize, selectedCategories);
 }
 
