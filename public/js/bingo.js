@@ -85,7 +85,7 @@ function makeGrid(htmlId, seed, gridSize, categories) {
  */
 function shuffle(complexGrid, seed, gridSize, checkedCategories) {
     let grid = [];
-    
+
     // get configuration
     for (let sectionName in complexGrid) {
         if (!checkedCategories.includes(sectionName)) {
@@ -103,10 +103,10 @@ function shuffle(complexGrid, seed, gridSize, checkedCategories) {
         return [];
     }
     errorDiv.innerHTML = "";
-    
+
     // Use the seed to create a random number generator
     let rng = xmur3(seed);
-    
+
     let array = grid.slice();
     for (let i = array.length - 1; i > 0; i--) {
         let j = Math.floor(rng() / 4294967296 * (i + 1));
@@ -328,10 +328,7 @@ function getSelectedCategories() {
 function createApplyButton() {
     let button = document.createElement("button");
     button.innerHTML = "Apply";
-    button.onclick = function () {
-        let selectedCategories = getSelectedCategories();
-        makeGrid("bingo_grid_p1", generateRandomSeed(), bingoGridSize, selectedCategories);
-    }
+    button.onclick = regenerateGrid;
     return button;
 }
 
@@ -385,16 +382,54 @@ function createGridSizeInput() {
     gridSizeInput.min = "3";
     gridSizeInput.max = "6";
     gridSizeInput.onchange = function () {
-        let selectedCategories = getSelectedCategories();
         bingoGridSize = parseInt(gridSizeInput.value);
-        makeGrid("bingo_grid_p1", generateRandomSeed(), bingoGridSize, selectedCategories);
+        regenerateGrid("bingo_grid_p1");
     }
     return gridSizeInput;
 }
 
-function renderConfig(gridSize, categories) {
+function renderCardSeedConfig(seed) {
+    if (seed) {
+        bingoSeed = seed;
+    }
+    let formDiv = document.getElementById("card_id");
+    formDiv.innerHTML = "";
+    let form = createCardSeedForm();
+    formDiv.appendChild(form);
+}
+
+function createCardSeedForm() {
+    let form = document.createElement("form");
+    let label = createCardSeedLabel();
+    form.appendChild(label);
+    let cardIdInput = createCardSeedInput();
+    form.appendChild(cardIdInput);
+    return form;
+}
+
+function createCardSeedLabel() {
+    let label = document.createElement("label");
+    label.htmlFor = "card_id";
+    label.appendChild(document.createTextNode("Card seed: "));
+    return label;
+}
+
+function createCardSeedInput() {
+    let cardSeedInput = document.createElement("input");
+    cardSeedInput.type = "text";
+    cardSeedInput.id = "card_id";
+    cardSeedInput.value = bingoSeed.toString();
+    cardSeedInput.onchange = function () {
+        bingoSeed = cardSeedInput.value;
+        regenerateGrid("bingo_grid_p1");
+    }
+    return cardSeedInput;
+}
+
+function renderConfig(gridSize, categories, seed) {
     renderCategoriesConfigForm(categories);
     renderGridSizeConfig(gridSize);
+    renderCardSeedConfig(seed);
 }
 
 function computeCategoriesSum(selectedCategories) {
@@ -408,10 +443,10 @@ function generateRandomSeed() {
 
 // xmur3 hash function
 function xmur3(str) {
-    for(var i = 0, h = 1779033703 ^ str.length; i < str.length; i++)
+    for (var i = 0, h = 1779033703 ^ str.length; i < str.length; i++)
         h = Math.imul(h ^ str.charCodeAt(i), 3432918353),
             h = h << 13 | h >>> 19;
-    return function() {
+    return function () {
         h = Math.imul(h ^ h >>> 16, 2246822507);
         h = Math.imul(h ^ h >>> 13, 3266489909);
         return (h ^= h >>> 16) >>> 0;
@@ -420,16 +455,17 @@ function xmur3(str) {
 
 function regenerateGrid(htmlId) {
     let selectedCategories = getSelectedCategories();
-    makeGrid(htmlId, generateRandomSeed(), bingoGridSize, selectedCategories);
+    renderCardSeedConfig(bingoSeed);
+    makeGrid(htmlId, bingoSeed, bingoGridSize, selectedCategories);
 }
 
 window.onload = function () {
     const urlParams = new URLSearchParams(window.location.search);
-    let seed = urlParams.get('seed') || generateRandomSeed();
+    let seed = urlParams.get('seed') || bingoSeed || generateRandomSeed();
     let gridSize = parseInt(urlParams.get('gridSize')) || bingoGridSize;
     let categoriesSum = parseInt(urlParams.get('categories')) || -1;
     let categories = parseCategoriesFromSum(categoriesSum);
 
-    renderConfig(gridSize, categories);
+    renderConfig(gridSize, categories, seed);
     makeGrid("bingo_grid_p1", seed, gridSize, categories);
 }

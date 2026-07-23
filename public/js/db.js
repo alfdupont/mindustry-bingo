@@ -326,6 +326,8 @@ let bingo = {
 
 let bingoGridSize = 5;
 
+let bingoSeed = null;
+
 let oldsprites = {
     "additive-reconstructor": "assets/oldsprites/additive-reconstructor.png",
     "aegires": "assets/oldsprites/aegires.png",
